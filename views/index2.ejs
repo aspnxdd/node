@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head.html'); %>
+</head>
+<h1>Materials List </h1>
+<ul>
+    <% materials.forEach(function(material) { %>
+        <li>
+            <%= material.name %>
+                <ul>
+                    <% Object.keys(material).forEach(function(material_propietat){ %>
+                        
+                        <li>
+                            <strong>
+                                <%= material_propietat %>
+                            </strong>: 
+                            <%if (material_propietat == "driver" ) { %>
+                                <ul>
+                                    <% material.driver.forEach(function(driver) { %>
+                                        <% Object.keys(driver).forEach(function(driver_propietat) { %>
+                                            <li> <strong><%= driver_propietat %></strong>: <%= driver[driver_propietat] %></li>
+                                        <% }); %>
+                                    <% }); %>
+                                </ul>
+                            <% }else{ %>
+                                <%= material[material_propietat] %>
+                            <% } %>
+                           
+                        </li>
+
+                        <% }); %>
+                </ul>
+        </li>
+        
+            <% }); %>
+</ul>

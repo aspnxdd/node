@@ -1,0 +1,27 @@
+//materials
+{
+    "_id":1,
+    "name": "wood",
+    "origin": "NC",
+    "driver_id": 1,
+    "weight":12000
+}
+//driver
+{
+    "_id":1,
+    "name": "jim",
+    "age": 45,
+    "properties": [180,  80]
+}
+//$lookup query
+db.materials.aggregate([
+{
+    $lookup:
+    {
+        from:"driver",
+        localField:"driver_id",
+        foreignField:"driver_id",
+        as: "driver"
+    }
+},
+])
