@@ -2,37 +2,102 @@
 <html lang="en">
 
 <head>
+    <title>Example</title>
+    <meta charset="utf-8">
+    <link  rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+    <link type="css" rel="stylesheet" href="bootstrap/css/bootstrap-theme.css" />
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+    <script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <%- include('../partials/head.html'); %>
 </head>
-<h1>Materials List </h1>
+<div class="container">
+    <h1>Materials List </h1>
+    <label id="algo">USUARI: &nbsp </label><br>
+    <input id="nom"></input><br>
+    <input id="pass"></input><br>
+    <button id="login">login</button>
+    <button id="logoff">log off</button>
+</div>
+<script>
+
+    let esperar2 = () => {
+        return new Promise(function (resolve, reject) {
+            //resolve i reject son 2 funcions
+            setTimeout(() => resolve("esperar"), 1000);
+        })
+    }
+    esperar2().then(
+        data => console.log(data)
+    );
+
+    document.getElementById("login").addEventListener("click", () => {
+        const nom = document.getElementById("nom").value
+        const pass = document.getElementById("pass").value
+
+        fetch("http://localhost:8000/login", {
+            method: "POST",
+            headers: {
+                nom,
+                pass
+            },
+            credentials: 'include',
+            redirect: "follow"
+        }).then(res => { //el objeto res lo uso en la siguiente función sin nombre =>
+            console.log("res: ", res);
+            res.json().then(function (resposta) {
+                console.log("res jsoned", resposta);
+                localStorage.setItem("token", resposta.token);
+                localStorage.setItem("nom", nom);
+            })
+        }).catch(function (error) {
+            console.log('Error with Fetch!!! ' + error.message);
+        });
+    })
+    document.getElementById("logoff").addEventListener("click", () => {
+        localStorage.setItem("token", null)
+        localStorage.setItem("nom", null)
+    })
+    console.log("nom", localStorage.getItem('nom'));
+    localStorage.getItem('nom') == 'null' ? true : document.getElementById("algo").innerText += localStorage.getItem('nom');
+    
+</script>
+
 <ul>
-    <% materials.forEach(function(material) { %>
+    <% materials.forEach((material)=> { %>
         <li>
             <%= material.name %>
                 <ul>
                     <% Object.keys(material).forEach(function(material_propietat){ %>
-                        
+
                         <li>
                             <strong>
                                 <%= material_propietat %>
-                            </strong>: 
-                            <%if (material_propietat == "driver" ) { %>
+                            </strong>:
+                            <%if (material_propietat=="driver" ) { %>
                                 <ul>
                                     <% material.driver.forEach(function(driver) { %>
                                         <% Object.keys(driver).forEach(function(driver_propietat) { %>
-                                            <li> <strong><%= driver_propietat %></strong>: <%= driver[driver_propietat] %></li>
-                                        <% }); %>
-                                    <% }); %>
+                                            <li> <strong>
+                                                    <%= driver_propietat %>
+                                                </strong>: <%= driver[driver_propietat] %>
+                                            </li>
+                                            <% }); %>
+                                                <% }); %>
                                 </ul>
-                            <% }else{ %>
-                                <%= material[material_propietat] %>
-                            <% } %>
-                           
+                                <% }else{ %>
+                                    <%= material[material_propietat] %>
+                                        <% } %>
+
                         </li>
 
                         <% }); %>
                 </ul>
         </li>
-        
-            <% }); %>
+
+        <% }); %>
 </ul>
+
+</html>

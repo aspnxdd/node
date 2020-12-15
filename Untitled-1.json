@@ -25,3 +25,12 @@ db.materials.aggregate([
     }
 },
 ])
+
+    // collection.find({}).toArray(function (err, materials_list) {
+    //     assert.equal(err, null);
+    //     console.log("collection loaded");
+    //     console.log(materials_list);
+    //     res.render("index2.ejs", {
+    //         materials: materials_list
+    //     });
+    // });
